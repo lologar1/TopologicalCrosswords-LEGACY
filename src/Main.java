@@ -40,9 +40,15 @@ public class Main {
 
         System.out.println("Creating dictionary...");
 
+        HashSet<Integer> possibleLengths = new HashSet<>();
+        pattern.forEach(l -> possibleLengths.add(l.length()));
+
         dictionary.put("*", new HashSet<>());
 
         Files.readAllLines(vocabulary).forEach(word -> {
+            if (!possibleLengths.contains(word.length())) {
+                return; //Cull unnecessary words !
+            }
             word = Normalizer.normalize(word.strip().toLowerCase(), Normalizer.Form.NFKC).replaceAll("\\p{M}", "");
             for (int i = 0; i < word.length(); i++) {
                 String substring = word.substring(0, i+1);
