@@ -13,10 +13,19 @@ public class Main {
     static ArrayList<String> pattern = new ArrayList<>();
     static ConcurrentHashMap<String, HashSet<String>> dictionary = new ConcurrentHashMap<>();
     static ConcurrentLinkedQueue<char[]> boards = new ConcurrentLinkedQueue<>();
+    static boolean showSolutions = false;
 
     public static void main(String[] args) throws IOException {
-        System.out.println("Starting TopologicalCrosswords. Attention : only prefix-fillable patterns are supported !");
+        System.out.println("Starting TopologicalCrosswords. To show solutions while searching, use -showSolutions");
         System.out.println("Reading pattern from file : pattern.txt");
+
+        for (String param : args) {
+            //More later ?
+            switch (param.toLowerCase()) {
+                case "-showsolutions" -> showSolutions = true;
+                default -> System.out.println("Unknown parameter " + param);
+            }
+        }
 
         Path patternPath = Paths.get("pattern.txt");
         if (!Files.exists(patternPath)) {
@@ -83,13 +92,15 @@ public class Main {
                 writer.write(str + "\n");
             }
         }
-        System.out.println("DONE !");
+        System.out.println("Finished !");
     }
 
     public static void fill(char[] board, int index) {
         if (index == pattern.size()) {
             boards.add(board);
-            System.out.println("Solution found : " + String.valueOf(board));
+            if (showSolutions) {
+                System.out.println("Solution found : " + String.valueOf(board));
+            }
             return;
         }
 
